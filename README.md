@@ -1,5 +1,7 @@
 # Mind Craft Launcher
 
+> **项目官网**：[在线访问](https://li-hangyu.github.io/MindCraftLauncher/) · [界面预览](docs/ui-preview.html) · 官网源文件位于 `docs/index.html`。
+
 一个基于 **PCL2（Plain Craft Launcher 2）界面结构移植**的 WPF 桌面启动器：界面重画，内部逻辑收敛成可替换的服务接口，并新增两条联机通道——**陶瓦联机**（EasyTier 真实组网）与**红石联机**（Yggdrasil 外置登录 + 服务器列表），同时支持 **LabyMod 4 客户端下载**。
 
 > **界面 2.0（本次更新）**：视觉全面重做——深色主题换成了「Deep Space」深空底 + 蓝→紫霓虹渐变强调色，左侧图标导航栏替代顶部标签条，自定义窗口外框（无边框 + 拖动 + 三个窗口按钮），启动页新增 Hero 主视觉与状态卡，全部输入控件（下拉框 / 复选框 / 单选框 / 滚动条 / 进度条）换成自定义模板，深浅两套主题键完全对齐，切页带淡入动画。视觉效果见 `docs/ui-preview.html`（浏览器直接打开）。

@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090b12">
+  <meta name="description" content="Mind Craft Launcher：面向 Windows 的 Minecraft 启动器，集中管理游戏版本、模组整合包与联机方式。">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Mind Craft Launcher — 把下一场冒险，准备好">
+  <meta property="og:description" content="版本管理、模组整合包与联机工具，一个启动器从容开始。">
+  <title>Mind Craft Launcher — 把下一场冒险，准备好</title>
+  <style>
+	:root {
+	  color-scheme: dark;
+	  --bg: #090b12;
+	  --panel: #111521;
+	  --panel-2: #171d2b;
+	  --line: rgba(195, 207, 255, .12);
+	  --text: #f3f5ff;
+	  --muted: #a0a9bf;
+	  --soft: #727d96;
+	  --blue: #88a0ff;
+	  --violet: #c28cff;
+	  --mint: #73e5bd;
+	  --orange: #ffad79;
+	  --radius: 22px;
+	  font-family: "Segoe UI", "Microsoft YaHei UI", "Noto Sans CJK SC", sans-serif;
+	  font-synthesis: none;
+	  text-rendering: optimizeLegibility;
+	}
+
+	*, *::before, *::after { box-sizing: border-box; }
+	html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+	body {
+	  margin: 0;
+	  min-width: 320px;
+	  background:
+		radial-gradient(ellipse at 79% 4%, rgba(114, 94, 210, .16), transparent 34rem),
+		radial-gradient(ellipse at 4% 32%, rgba(63, 117, 200, .12), transparent 30rem),
+		var(--bg);
+	  color: var(--text);
+	  line-height: 1.65;
+	}
+	a { color: inherit; text-decoration: none; }
+	button { font: inherit; }
+	.skip-link {
+	  position: absolute; top: -60px; left: 16px; z-index: 20;
+	  padding: 10px 14px; border-radius: 10px; background: var(--text); color: var(--bg);
+	}
+	.skip-link:focus { top: 12px; }
+	.wrap { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
+
+	.site-header { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid transparent; transition: background .2s, border-color .2s; }
+	.site-header.scrolled { background: rgba(9, 11, 18, .83); border-color: var(--line); backdrop-filter: blur(18px); }
+	.nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+	.brand { display: inline-flex; align-items: center; gap: 11px; flex-shrink: 0; }
+	.brand-mark {
+	  display: grid; width: 38px; aspect-ratio: 1; place-items: center; border-radius: 12px;
+	  background: linear-gradient(140deg, #7d9aff, #9d7bff 60%, #c47cff);
+	  box-shadow: 0 0 28px rgba(130, 137, 255, .28);
+	}
+	.brand-mark svg { width: 23px; height: 23px; }
+	.brand-name { font-size: 13px; font-weight: 750; letter-spacing: .09em; line-height: 1.2; }
+	.brand-name span { display: block; color: var(--soft); font-size: 9px; font-weight: 650; letter-spacing: .24em; margin-top: 4px; }
+	.nav-links { display: flex; align-items: center; gap: 30px; color: var(--muted); font-size: 13px; }
+	.nav-links a:hover, .footer-links a:hover { color: var(--text); }
+	.nav-actions { display: flex; align-items: center; gap: 10px; }
+	.menu-toggle { display: none; }
+
+	.button {
+	  min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+	  padding: 0 19px; border: 1px solid var(--line); border-radius: 12px;
+	  background: rgba(255,255,255,.035); color: var(--text); font-size: 13px; font-weight: 650;
+	  transition: transform .2s, border-color .2s, background .2s, box-shadow .2s;
+	}
+	.button:hover { transform: translateY(-2px); border-color: rgba(173, 184, 255, .38); background: rgba(255,255,255,.075); }
+	.button:focus-visible, a:focus-visible, button:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+	.button-primary {
+	  border-color: transparent; color: #10111a;
+	  background: linear-gradient(115deg, #9cb3ff, #c49bff 58%, #e1a5ff);
+	  box-shadow: 0 10px 35px rgba(141, 130, 255, .23);
+	}
+	.button-primary:hover { border-color: transparent; background: linear-gradient(115deg, #b0c1ff, #d2afff 58%, #edbbff); box-shadow: 0 14px 40px rgba(141, 130, 255, .32); }
+	.button-small { min-height: 38px; padding-inline: 15px; font-size: 12px; }
+	.button svg { width: 16px; height: 16px; }
+
+	.hero { position: relative; display: grid; grid-template-columns: 1.03fr .97fr; align-items: center; gap: 54px; padding-block: 84px 104px; }
+	.hero::before {
+	  content: ""; position: absolute; z-index: -1; width: 420px; height: 420px; right: 4%; top: 12%;
+	  border-radius: 50%; background: rgba(119, 106, 255, .1); filter: blur(95px); pointer-events: none;
+	}
+	.eyebrow { display: inline-flex; align-items: center; gap: 9px; color: #c4caff; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+	.eyebrow-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 14px rgba(115,229,189,.75); }
+	h1 { max-width: 620px; margin: 22px 0 20px; font-size: clamp(42px, 5.7vw, 68px); font-weight: 760; letter-spacing: -.055em; line-height: 1.12; }
+	.gradient-text { color: transparent; background: linear-gradient(100deg, #a5baff 10%, #c5a0ff 61%, #f0abdb); background-clip: text; -webkit-background-clip: text; }
+	.hero-copy { max-width: 520px; margin: 0; color: var(--muted); font-size: 16px; line-height: 1.9; }
+	.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+	.hero-note { display: flex; align-items: center; gap: 9px; margin-top: 20px; color: var(--soft); font-size: 11px; }
+	.hero-note svg { flex: 0 0 15px; color: var(--mint); }
+
+	.preview-shell {
+	  position: relative; padding: 1px; border-radius: 20px;
+	  background: linear-gradient(145deg, rgba(174,184,255,.44), rgba(174,184,255,.06) 45%, rgba(210,144,255,.27));
+	  box-shadow: 0 32px 100px rgba(0,0,0,.4), 0 0 70px rgba(124, 112, 255, .09);
+	  transform: perspective(1200px) rotateY(-5deg) rotateX(2deg);
+	}
+	.preview { overflow: hidden; min-height: 345px; border-radius: 19px; background: #0e121b; }
+	.window-bar { height: 47px; display: flex; align-items: center; gap: 7px; padding: 0 16px; border-bottom: 1px solid rgba(255,255,255,.055); background: #111621; }
+	.window-dot { width: 7px; height: 7px; border-radius: 50%; background: #596173; }
+	.window-label { margin-left: 7px; color: #808aa0; font-size: 9px; letter-spacing: .14em; }
+	.window-live { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; color: #99a4b9; font-size: 9px; }
+	.window-live i { width: 5px; height: 5px; border-radius: 50%; background: var(--mint); }
+	.app-body { min-height: 298px; display: grid; grid-template-columns: 60px 1fr; }
+	.app-rail { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 15px 8px; border-right: 1px solid rgba(255,255,255,.055); background: #111621; }
+	.rail-icon { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 9px; color: #68748e; }
+	.rail-icon svg { width: 15px; height: 15px; }
+	.rail-icon.active { color: #dce1ff; background: linear-gradient(135deg, rgba(110,137,255,.35), rgba(186,115,255,.24)); box-shadow: inset 0 0 0 1px rgba(172,174,255,.16); }
+	.app-content { padding: 23px 24px; }
+	.app-kicker { color: #7d88a0; font-size: 9px; font-weight: 700; letter-spacing: .15em; }
+	.app-title { margin-top: 6px; font-size: 19px; font-weight: 700; letter-spacing: -.025em; }
+	.app-sub { margin-top: 4px; color: #8792a8; font-size: 10px; }
+	.current-card { position: relative; overflow: hidden; margin-top: 17px; padding: 17px; border: 1px solid rgba(143,151,255,.2); border-radius: 14px; background: linear-gradient(115deg, rgba(76,98,173,.23), rgba(115,75,149,.14) 60%, rgba(24,30,44,.7)); }
+	.current-card::after { content: ""; position: absolute; width: 130px; height: 130px; right: -24px; top: -54px; border-radius: 50%; background: rgba(151,133,255,.19); filter: blur(24px); }
+	.current-label { color: #9da9c5; font-size: 8px; font-weight: 700; letter-spacing: .13em; }
+	.current-version { margin-top: 5px; font-size: 18px; font-weight: 720; }
+	.chips { display: flex; gap: 6px; margin-top: 10px; }
+	.chip { padding: 3px 8px; border: 1px solid rgba(255,255,255,.08); border-radius: 6px; color: #b0bad0; background: rgba(9,12,20,.36); font-size: 8px; }
+	.chip.accent { color: #c1c6ff; border-color: transparent; background: rgba(126,127,255,.15); }
+	.launch-row { display: flex; gap: 8px; margin-top: 15px; }
+	.mini-button { display: inline-flex; align-items: center; gap: 6px; min-height: 31px; padding: 0 11px; border: 1px solid rgba(255,255,255,.09); border-radius: 8px; color: #d5d9e8; background: rgba(255,255,255,.035); font-size: 9px; }
+	.mini-button.primary { border-color: transparent; color: #11131c; background: linear-gradient(110deg, #a5b8ff, #d0a6ff); font-weight: 700; }
+	.app-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+	.app-stat { min-height: 58px; padding: 9px; border: 1px solid rgba(255,255,255,.055); border-radius: 10px; background: rgba(255,255,255,.025); }
+	.app-stat small { display: block; color: #78839a; font-size: 8px; }
+	.app-stat strong { display: block; margin-top: 3px; color: #e4e7f2; font-size: 12px; }
+	.preview-caption { margin: 11px 0 0; color: #778198; font-size: 10px; text-align: center; }
+	.float-tag { position: absolute; right: -18px; bottom: 36px; display: inline-flex; align-items: center; gap: 8px; padding: 10px 13px; border: 1px solid rgba(255,255,255,.11); border-radius: 11px; color: #d9deef; background: rgba(18,23,35,.93); box-shadow: 0 12px 30px rgba(0,0,0,.3); font-size: 10px; backdrop-filter: blur(14px); }
+	.float-tag svg { width: 15px; height: 15px; color: var(--orange); }
+
+	.trust-row { display: grid; grid-template-columns: repeat(4, 1fr); padding: 22px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+	.trust-item { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 38px; color: #b1bad0; font-size: 11px; }
+	.trust-item + .trust-item { border-left: 1px solid var(--line); }
+	.trust-item svg { width: 17px; height: 17px; color: #a9aaff; }
+
+	.section { padding-block: 108px; }
+	.section-heading { max-width: 660px; margin-bottom: 38px; }
+	.section-kicker { color: #b8aaff; font-size: 10px; font-weight: 750; letter-spacing: .17em; text-transform: uppercase; }
+	h2 { margin: 11px 0 12px; font-size: clamp(30px, 4vw, 43px); letter-spacing: -.04em; line-height: 1.2; }
+	.section-heading p { max-width: 580px; margin: 0; color: var(--muted); font-size: 14px; }
+	.feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+	.feature-card { position: relative; overflow: hidden; min-height: 220px; padding: 23px; border: 1px solid var(--line); border-radius: 17px; background: linear-gradient(145deg, rgba(255,255,255,.045), rgba(255,255,255,.014)); transition: transform .22s, border-color .22s; }
+	.feature-card:hover { transform: translateY(-4px); border-color: rgba(172,177,255,.28); }
+	.feature-icon { display: grid; width: 40px; height: 40px; place-items: center; border: 1px solid rgba(166,173,255,.17); border-radius: 12px; color: #c4c5ff; background: rgba(124,129,255,.09); }
+	.feature-icon svg { width: 19px; height: 19px; }
+	.feature-card h3 { margin: 18px 0 7px; font-size: 15px; }
+	.feature-card p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+	.feature-card .tone-orange { color: var(--orange); border-color: rgba(255,173,121,.19); background: rgba(255,173,121,.08); }
+	.feature-card .tone-red { color: #ff8e9b; border-color: rgba(255,142,155,.17); background: rgba(255,142,155,.08); }
+	.feature-card .tone-green { color: var(--mint); border-color: rgba(115,229,189,.16); background: rgba(115,229,189,.07); }
+
+	.split-section { display: grid; grid-template-columns: .9fr 1.1fr; align-items: center; gap: 68px; padding-block: 72px 110px; }
+	.split-copy h2 { max-width: 440px; }
+	.split-copy p { color: var(--muted); font-size: 14px; }
+	.check-list { display: grid; gap: 13px; margin: 23px 0 0; padding: 0; list-style: none; }
+	.check-list li { display: flex; gap: 10px; color: #c4cadd; font-size: 12px; }
+	.check-list svg { width: 16px; height: 16px; flex: 0 0 16px; margin-top: 2px; color: var(--mint); }
+	.terminal-card { padding: 19px; border: 1px solid var(--line); border-radius: 17px; background: linear-gradient(145deg, #111622, #0d111a); box-shadow: 0 24px 70px rgba(0,0,0,.2); }
+	.terminal-head { display: flex; align-items: center; gap: 6px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+	.terminal-head .window-dot:nth-child(1) { background: #ff827b; }
+	.terminal-head .window-dot:nth-child(2) { background: #f7c66a; }
+	.terminal-head .window-dot:nth-child(3) { background: #69d6a5; }
+	.terminal-title { margin-left: 7px; color: #818ba0; font-size: 9px; }
+	.terminal-content { padding-top: 15px; }
+	.terminal-row { display: grid; grid-template-columns: 80px 1fr; gap: 16px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.045); }
+	.terminal-row:last-child { border-bottom: 0; }
+	.terminal-key { color: #7e8ba5; font-size: 10px; }
+	.terminal-value { color: #d2d7e7; font-size: 10px; }
+	.terminal-value span { color: #b5a4ff; }
+	.privacy-note { margin-top: 16px; padding: 13px 15px; border: 1px solid rgba(255,173,121,.13); border-radius: 11px; color: #bbb4aa; background: rgba(255,173,121,.045); font-size: 10px; line-height: 1.8; }
+	.privacy-note strong { color: #ffca9e; }
+
+	.start-section { padding-block: 32px 104px; }
+	.start-card { position: relative; overflow: hidden; padding: 48px; border: 1px solid rgba(172,171,255,.19); border-radius: 23px; background: linear-gradient(120deg, rgba(57,72,133,.33), rgba(73,49,111,.23) 55%, rgba(24,29,44,.72)); }
+	.start-card::after { content: ""; position: absolute; width: 350px; height: 350px; right: -45px; top: -190px; border-radius: 50%; background: rgba(166,125,255,.21); filter: blur(65px); pointer-events: none; }
+	.start-content { position: relative; z-index: 1; max-width: 720px; }
+	.start-content p { max-width: 600px; margin: 0; color: #c2c8da; font-size: 13px; }
+	.start-actions { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 23px; }
+	.requirements { margin-top: 19px !important; color: #919bb0 !important; font-size: 10px !important; }
+
+	footer { border-top: 1px solid var(--line); }
+	.footer-main { display: flex; justify-content: space-between; align-items: flex-start; gap: 36px; padding-block: 31px 25px; }
+	.footer-brand p { max-width: 340px; margin: 12px 0 0; color: var(--soft); font-size: 10px; }
+	.footer-links { display: flex; flex-wrap: wrap; gap: 20px; color: #a2acc0; font-size: 11px; }
+	.footer-bottom { display: flex; justify-content: space-between; gap: 20px; padding-block: 15px 22px; border-top: 1px solid rgba(255,255,255,.055); color: #727c90; font-size: 9px; }
+
+	@media (max-width: 900px) {
+	  .hero { grid-template-columns: 1fr .9fr; gap: 32px; padding-block: 67px 82px; }
+	  .preview { min-height: 330px; }
+	  .app-body { min-height: 283px; grid-template-columns: 48px 1fr; }
+	  .app-content { padding: 20px 16px; }
+	  .trust-item { font-size: 10px; }
+	  .split-section { gap: 38px; }
+	}
+	@media (max-width: 700px) {
+	  .wrap { width: min(100% - 36px, 520px); }
+	  .nav { min-height: 66px; }
+	  .nav-links { display: none; position: absolute; top: 65px; left: 0; right: 0; padding: 14px 22px 20px; border-bottom: 1px solid var(--line); background: rgba(9,11,18,.97); }
+	  .nav-links.open { display: grid; gap: 4px; }
+	  .nav-links a { padding: 10px 4px; }
+	  .nav-actions .button-small { display: none; }
+	  .menu-toggle { display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 11px; color: var(--text); background: rgba(255,255,255,.04); }
+	  .menu-toggle svg { width: 18px; height: 18px; }
+	  .hero { grid-template-columns: 1fr; gap: 37px; padding-block: 55px 69px; }
+	  h1 { max-width: 510px; font-size: clamp(42px, 11vw, 58px); }
+	  .hero-copy { font-size: 14px; }
+	  .preview-shell { width: min(100%, 470px); margin-inline: auto; transform: none; }
+	  .preview { min-height: 330px; }
+	  .float-tag { right: -7px; bottom: 18px; }
+	  .trust-row { grid-template-columns: repeat(2, 1fr); gap: 10px 0; padding-block: 17px; }
+	  .trust-item { justify-content: flex-start; padding-left: 9px; }
+	  .trust-item + .trust-item { border-left: 0; }
+	  .trust-item:nth-child(even) { border-left: 1px solid var(--line); padding-left: 20px; }
+	  .section { padding-block: 78px; }
+	  .feature-grid { grid-template-columns: 1fr; }
+	  .feature-card { min-height: 0; padding: 20px; }
+	  .feature-card h3 { margin-top: 14px; }
+	  .split-section { grid-template-columns: 1fr; gap: 30px; padding-block: 32px 77px; }
+	  .start-section { padding-bottom: 75px; }
+	  .start-card { padding: 31px 23px; }
+	  .footer-main { flex-direction: column; gap: 24px; }
+	  .footer-bottom { flex-direction: column; gap: 5px; }
+	}
+	@media (max-width: 390px) {
+	  .brand-name { font-size: 11px; }
+	  .hero-actions .button { flex: 1; padding-inline: 12px; }
+	  .app-content { padding-inline: 11px; }
+	  .app-body { grid-template-columns: 42px 1fr; }
+	  .app-stat { padding: 7px; }
+	  .app-stats { gap: 5px; }
+	  .terminal-row { grid-template-columns: 65px 1fr; gap: 9px; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+	  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+	}
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+	<div class="wrap nav">
+	  <a class="brand" href="#top" aria-label="Mind Craft Launcher 首页">
+		<span class="brand-mark" aria-hidden="true">
+		  <svg viewBox="0 0 24 24" fill="none"><path d="m12 2.8 8.3 4.6v9.2L12 21.2l-8.3-4.6V7.4L12 2.8Z" stroke="white" stroke-width="1.5"/><path d="m3.9 7.7 8.1 4.5 8.1-4.5M12 12.2v8.4" stroke="white" stroke-width="1.5"/><path d="m8 5 8.2 4.6" stroke="white" stroke-width="1.2" opacity=".55"/></svg>
+		</span>
+		<span class="brand-name">MIND CRAFT<span>LAUNCHER</span></span>
+	  </a>
+	  <nav class="nav-links" id="nav-links" aria-label="主导航">
+		<a href="#features">功能</a>
+		<a href="#experience">使用体验</a>
+		<a href="ui-preview.html">界面预览</a>
+		<a href="#about">关于项目</a>
+	  </nav>
+	  <div class="nav-actions">
+		<a class="button button-small" href="https://github.com/Li-Hangyu/MindCraftLauncher" target="_blank" rel="noopener noreferrer">GitHub <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+		<button class="menu-toggle" id="menu-toggle" type="button" aria-label="打开导航菜单" aria-expanded="false" aria-controls="nav-links"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+	  </div>
+	</div>
+  </header>
+
+  <main id="main">
+	<section class="wrap hero" aria-labelledby="hero-title">
+	  <div class="hero-copy-block">
+		<div class="eyebrow"><span class="eyebrow-dot"></span>为你的方块世界而造</div>
+		<h1 id="hero-title">把下一场冒险，<br><span class="gradient-text">准备好。</span></h1>
+		<p class="hero-copy">从游戏版本、模组整合包，到和朋友组队联机。把琐碎的准备收进一个清晰、顺手的启动器里，把时间留给真正想玩的世界。</p>
+		<div class="hero-actions">
+		  <a class="button button-primary" href="https://github.com/Li-Hangyu/MindCraftLauncher" target="_blank" rel="noopener noreferrer">探索 GitHub 项目 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+		  <a class="button" href="ui-preview.html">查看界面预览</a>
+		</div>
+		<div class="hero-note"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12 4.3 4.3L19 6.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Windows 桌面应用 · .NET 8 · 开源项目</div>
+	  </div>
+
+	  <div>
+		<div class="preview-shell" aria-label="启动器界面示意">
+		  <div class="preview">
+			<div class="window-bar"><span class="window-dot"></span><span class="window-dot"></span><span class="window-dot"></span><span class="window-label">MIND CRAFT LAUNCHER</span><span class="window-live"><i></i>就绪</span></div>
+			<div class="app-body">
+			  <div class="app-rail" aria-hidden="true">
+				<span class="rail-icon active"><svg viewBox="0 0 24 24" fill="none"><path d="m8 5 11 7-11 7V5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span>
+				<span class="rail-icon"><svg viewBox="0 0 24 24" fill="none"><path d="m12 3 9 5-9 5-9-5 9-5Zm-9 9 9 5 9-5m-18 5 9 5 9-5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span>
+				<span class="rail-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v11m-5-5 5 5 5-5M4 20h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+				<span class="rail-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3Zm-8 4.5 8 4.5 8-4.5M12 12v9" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span>
+				<span class="rail-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M5 5h5v5H5zM14 5h5v5h-5zM5 14h5v5H5zM14 14h5v5h-5z" stroke="currentColor" stroke-width="1.5"/></svg></span>
+			  </div>
+			  <div class="app-content">
+				<div class="app-kicker">YOUR NEXT WORLD</div>
+				<div class="app-title">启动</div>
+				<div class="app-sub">选择版本，准备进入你的世界。</div>
+				<div class="current-card">
+				  <div class="current-label">当前选择 · 界面示意</div>
+				  <div class="current-version">Minecraft 版本</div>
+				  <div class="chips"><span class="chip accent">版本管理</span><span class="chip">模组整合</span></div>
+				  <div class="launch-row"><span class="mini-button primary">▶&nbsp; 启动游戏</span><span class="mini-button">选择版本</span></div>
+				</div>
+				<div class="app-stats">
+				  <div class="app-stat"><small>游戏版本</small><strong>自由管理</strong></div>
+				  <div class="app-stat"><small>整合内容</small><strong>一处整理</strong></div>
+				  <div class="app-stat"><small>联机方式</small><strong>按需选择</strong></div>
+				</div>
+			  </div>
+			</div>
+		  </div>
+		</div>
+		<div class="preview-caption">界面视觉示意 · 查看完整界面预览</div>
+		<div class="float-tag"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v18m9-9H3m15.36-6.36L5.64 18.36m12.72 0L5.64 5.64" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>准备就绪，出发吧</div>
+	  </div>
+	</section>
+
+	<div class="wrap trust-row" aria-label="项目概览">
+	  <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5h16v11H4zM8 20h8m-4-4v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Windows 桌面启动器</div>
+	  <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 5h14v14H5zM9 9h6v6H9z" stroke="currentColor" stroke-width="1.5"/></svg>版本与模组管理</div>
+	  <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v5m0 8v5M3 12h5m8 0h5M5.64 5.64l3.54 3.54m5.64 5.64 3.54 3.54m0-12.72-3.54 3.54m-5.64 5.64-3.54 3.54" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>为联机体验添选择</div>
+	  <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 19 6v6c0 4.4-3 7.5-7 9-4-1.5-7-4.6-7-9V6l7-3Z" stroke="currentColor" stroke-width="1.5"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>公开源码，可自行审阅</div>
+	</div>
+
+	<section class="wrap section" id="features" aria-labelledby="features-title">
+	  <div class="section-heading">
+		<div class="section-kicker">Less setup, more play</div>
+		<h2 id="features-title">游戏的准备工作，<br>也可以很简单。</h2>
+		<p>从管理常用版本，到整理模组内容、连接好友的世界，把常用操作放进一个连贯的桌面体验。</p>
+	  </div>
+	  <div class="feature-grid">
+		<article class="feature-card">
+		  <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5 9-5Zm-9 9 9 5 9-5m-18 5 9 5 9-5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span>
+		  <h3>版本，各自安放</h3>
+		  <p>用独立卡片查看和切换已安装版本。Fabric、Forge 等加载器与不同游戏配置，都能更清楚地管理。</p>
+		</article>
+		<article class="feature-card">
+		  <span class="feature-icon tone-green"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v11m-5-5 5 5 5-5M4 20h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+		  <h3>模组与整合包，一起整理</h3>
+		  <p>搜索并安装 Modrinth 模组或整合包，也支持 LabyMod 客户端。所需加载器和内容各有入口。</p>
+		</article>
+		<article class="feature-card">
+		  <span class="feature-icon tone-orange"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 5h5v5H5zM14 5h5v5h-5zM5 14h5v5H5zM14 14h5v5h-5z" stroke="currentColor" stroke-width="1.5"/><path d="M10 7.5h4M7.5 10v4m9-4v4m-6.5 2.5h4" stroke="currentColor" stroke-width="1.3"/></svg></span>
+		  <h3>和朋友，换种方式联机</h3>
+		  <p>提供 EasyTier 陶瓦联机与 Yggdrasil 红石外置登录入口；连接方式和服务端要求请先查看项目说明。</p>
+		</article>
+		<article class="feature-card">
+		  <span class="feature-icon tone-red"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 19 6v6c0 4.4-3 7.5-7 9-4-1.5-7-4.6-7-9V6l7-3Z" stroke="currentColor" stroke-width="1.5"/><path d="M12 8v5m0 3h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+		  <h3>重要开关，清晰可见</h3>
+		  <p>Minecraft 本体下载默认关闭，并有单独确认开关。下载来源、运行环境与功能边界都可在文档中了解。</p>
+		</article>
+		<article class="feature-card">
+		  <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16M8 4v4m8 2v4m-5 2v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+		  <h3>常用设置，随手调整</h3>
+		  <p>配置游戏目录、Java 路径和内存参数，选择界面主题，让启动环境更贴合自己的使用习惯。</p>
+		</article>
+		<article class="feature-card">
+		  <span class="feature-icon tone-green"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 12.5 10.5 15 16 9m4 3a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+		  <h3>公开源码，过程透明</h3>
+		  <p>项目代码和构建说明托管于 GitHub。想了解实现、反馈问题或参与改进，都可以从仓库开始。</p>
+		</article>
+	  </div>
+	</section>
+
+	<section class="wrap split-section" id="experience" aria-labelledby="experience-title">
+	  <div class="split-copy">
+		<div class="section-kicker">Made for your setup</div>
+		<h2 id="experience-title">你的目录、你的 Java，<br>你来掌控。</h2>
+		<p>把关键环境放到明处：选定游戏目录、配置 Java 和内存，再根据需要启用加载器、模组或联机方式。</p>
+		<ul class="check-list">
+		  <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12 4.2 4.2L19 6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>面向 Windows 10 / 11 的 WPF 桌面应用</li>
+		  <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12 4.2 4.2L19 6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>.NET 8；运行需要 .NET 8 Desktop Runtime</li>
+		  <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12 4.2 4.2L19 6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>功能、依赖与已知限制以仓库 README 为准</li>
+		</ul>
+	  </div>
+	  <div>
+		<div class="terminal-card" aria-label="启动器设置项目示意">
+		  <div class="terminal-head"><span class="window-dot"></span><span class="window-dot"></span><span class="window-dot"></span><span class="terminal-title">设置 · 路径与 Java</span></div>
+		  <div class="terminal-content">
+			<div class="terminal-row"><span class="terminal-key">游戏目录</span><span class="terminal-value">选择你自己的 .minecraft 路径</span></div>
+			<div class="terminal-row"><span class="terminal-key">Java</span><span class="terminal-value">自动匹配或指定可执行文件</span></div>
+			<div class="terminal-row"><span class="terminal-key">游戏版本</span><span class="terminal-value"><span>Fabric</span> · Forge · 原版 · 更多</span></div>
+			<div class="terminal-row"><span class="terminal-key">模组内容</span><span class="terminal-value">Modrinth 模组与整合包</span></div>
+			<div class="terminal-row"><span class="terminal-key">联机功能</span><span class="terminal-value"><span>EasyTier</span> · Yggdrasil</span></div>
+		  </div>
+		</div>
+		<div class="privacy-note"><strong>账号与隐私提示：</strong>项目说明指出，账号令牌等数据会保存在本机配置文件中，当前为明文存储。请只在可信设备上使用，并先阅读仓库中的安全与已知限制说明。</div>
+	  </div>
+	</section>
+
+	<section class="wrap start-section" id="about" aria-labelledby="start-title">
+	  <div class="start-card">
+		<div class="start-content">
+		  <div class="section-kicker">Open source · Windows · .NET 8</div>
+		  <h2 id="start-title">想看看它如何工作？</h2>
+		  <p>访问 GitHub 仓库，查看源码、项目文档和构建方式。当前页面是项目介绍与界面预览；请以仓库实际发布的版本和说明为准。</p>
+		  <div class="start-actions">
+			<a class="button button-primary" href="https://github.com/Li-Hangyu/MindCraftLauncher" target="_blank" rel="noopener noreferrer">前往 GitHub 仓库 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+			<a class="button" href="../README.md">阅读项目说明</a>
+		  </div>
+		  <p class="requirements">运行环境：Windows 10 / 11 · .NET 8 Desktop Runtime · 部分联机功能需要额外组件。</p>
+		</div>
+	  </div>
+	</section>
+  </main>
+
+  <footer>
+	<div class="wrap footer-main">
+	  <div class="footer-brand">
+		<a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m12 2.8 8.3 4.6v9.2L12 21.2l-8.3-4.6V7.4L12 2.8Z" stroke="white" stroke-width="1.5"/><path d="m3.9 7.7 8.1 4.5 8.1-4.5M12 12.2v8.4" stroke="white" stroke-width="1.5"/></svg></span><span class="brand-name">MIND CRAFT<span>LAUNCHER</span></span></a>
+		<p>让游戏准备更清晰，把更多时间留给下一次冒险。</p>
+	  </div>
+	  <nav class="footer-links" aria-label="页脚导航">
+		<a href="https://github.com/Li-Hangyu/MindCraftLauncher" target="_blank" rel="noopener noreferrer">GitHub</a>
+		<a href="../README.md">项目文档</a>
+		<a href="ui-preview.html">界面预览</a>
+	  </nav>
+	</div>
+	<div class="wrap footer-bottom">
+	  <span>© <span id="year">2026</span> Mind Craft Launcher · 独立社区项目</span>
+	  <span>本项目与 Mojang、Microsoft 或 Minecraft 官方无关联。</span>
+	</div>
+  </footer>
+  <script>
+	const header = document.querySelector('.site-header');
+	const menuButton = document.querySelector('#menu-toggle');
+	const navLinks = document.querySelector('#nav-links');
+
+	function updateHeader() {
+	  header.classList.toggle('scrolled', window.scrollY > 12);
+	}
+
+	window.addEventListener('scroll', updateHeader, { passive: true });
+	updateHeader();
+
+	menuButton.addEventListener('click', () => {
+	  const isOpen = menuButton.getAttribute('aria-expanded') === 'true';
+	  menuButton.setAttribute('aria-expanded', String(!isOpen));
+	  menuButton.setAttribute('aria-label', isOpen ? '打开导航菜单' : '关闭导航菜单');
+	  navLinks.classList.toggle('open', !isOpen);
+	});
+
+	navLinks.addEventListener('click', event => {
+	  if (event.target.closest('a')) {
+		navLinks.classList.remove('open');
+		menuButton.setAttribute('aria-expanded', 'false');
+		menuButton.setAttribute('aria-label', '打开导航菜单');
+	  }
+	});
+
+	document.querySelector('#year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
