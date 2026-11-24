@@ -1,0 +1,179 @@
+<UserControl x:Class="MindCraftLauncher.App.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             DataContext="{Binding Settings}"
+             Background="Transparent">
+    <ScrollViewer Style="{StaticResource ScrollablePage}">
+        <StackPanel MaxWidth="1060" HorizontalAlignment="Left">
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
+                <Border Width="4" Height="26" CornerRadius="2" Background="{DynamicResource BrushAccentGradient}"
+                        VerticalAlignment="Center" Margin="0,0,12,0" />
+                <TextBlock Text="设置" Style="{StaticResource PageTitle}" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Style="{StaticResource PageSubtitle}"
+                       Text="界面外观即时生效；其他设置点击「保存设置」后立即应用到当前启动器，无需重启。" />
+
+            <Grid Margin="0,18,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="14" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- 左列 -->
+                <StackPanel>
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="外观" Style="{StaticResource SectionTitle}" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="76" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="主题" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource BrushTextDim}" FontSize="12" />
+                                <ComboBox Grid.Column="1" ItemsSource="{Binding Themes}"
+                                          SelectedItem="{Binding SelectedTheme}" />
+                            </Grid>
+                            <TextBlock Style="{StaticResource Hint}" Margin="0,8,0,0"
+                                       Text="深色为默认的 Deep Space 配色；浅色为 Paper Light。切换即时生效。" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="路径与 Java" Style="{StaticResource SectionTitle}" />
+
+                            <TextBlock Text="游戏目录（.minecraft）" Style="{StaticResource Overline}" Margin="0,0,0,5" />
+                            <DockPanel>
+                                <Button DockPanel.Dock="Right" Content="浏览" Command="{Binding BrowseGameRootCommand}"
+                                        Margin="8,0,0,0" />
+                                <TextBox Text="{Binding GameRoot}" FontSize="11.5" />
+                            </DockPanel>
+
+                            <TextBlock Text="javaw 可执行文件（留空则按游戏版本自动匹配）" Style="{StaticResource Overline}"
+                                       Margin="0,12,0,5" />
+                            <DockPanel>
+                                <Button DockPanel.Dock="Right" Content="浏览" Command="{Binding BrowseJavaCommand}"
+                                        Margin="8,0,0,0" />
+                                <Button DockPanel.Dock="Right" Content="全盘扫描" Command="{Binding DetectJavaCommand}"
+                                        Margin="8,0,0,0" />
+                                <TextBox Text="{Binding JavaPath}" FontSize="11.5" />
+                            </DockPanel>
+                            <ComboBox ItemsSource="{Binding JavaInstalls}" Margin="0,8,0,0"
+                                      SelectedItem="{Binding SelectedJava}" DisplayMemberPath="DisplayName"
+                                      ToolTip="已导入的 JDK；启动时按 Minecraft 版本自动选择对应主版本" />
+
+                            <Grid Margin="0,12,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="130" />
+                                    <ColumnDefinition Width="12" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="最大内存 MB" Style="{StaticResource Overline}" Margin="0,0,0,5" />
+                                    <TextBox Text="{Binding MaxMemory}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="附加 JVM 参数" Style="{StaticResource Overline}" Margin="0,0,0,5" />
+                                    <TextBox Text="{Binding ExtraJvmArgs}" />
+                                </StackPanel>
+                            </Grid>
+
+                            <CheckBox Content="启用版本隔离（每个版本独立 mods / saves）" IsChecked="{Binding VersionIsolation}"
+                                      Margin="0,14,0,0" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="EasyTier（陶瓦联机依赖）" Style="{StaticResource SectionTitle}" />
+                            <DockPanel>
+                                <Button DockPanel.Dock="Right" Content="浏览" Command="{Binding BrowseEasyTierCommand}"
+                                        Margin="8,0,0,0" />
+                                <Button DockPanel.Dock="Right" Content="自动查找" Command="{Binding DetectEasyTierCommand}"
+                                        Margin="8,0,0,0" />
+                                <TextBox Text="{Binding EasyTierCorePath}" FontSize="11.5" />
+                            </DockPanel>
+                            <TextBlock Style="{StaticResource Hint}" Margin="0,8,0,0"
+                                       Text="创建虚拟网卡需要管理员权限。若组网失败，请以管理员身份重新启动启动器。" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- 右列 -->
+                <StackPanel Grid.Column="2">
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="功能开关" Style="{StaticResource SectionTitle}" />
+                            <TextBlock Style="{StaticResource Hint}" TextWrapping="Wrap"
+                                       Text="对应上游 PCL2 里「是否允许下载游戏本体」那一个判断。移植版把它收敛成 Core/Config/FeatureFlags.cs 的 GameDownloadEnabled 一处，默认 false。" />
+
+                            <Border Style="{StaticResource NoticeWarn}" Margin="0,10,0,0">
+                                <StackPanel>
+                                    <CheckBox Content="Minecraft 本体下载" IsChecked="{Binding GameDownloadEnabled}" Margin="0" />
+                                    <CheckBox Content="已确认下载来源说明（开启本体下载必需）" IsChecked="{Binding Acknowledged}" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Height="1" Background="{DynamicResource BrushDivider}" Margin="0,14,0,6" />
+
+                            <CheckBox Content="LabyMod 客户端下载" IsChecked="{Binding LabyModEnabled}" Margin="0,4,0,0" />
+                            <CheckBox Content="陶瓦联机（EasyTier 组网）" IsChecked="{Binding TerracottaEnabled}" />
+                            <CheckBox Content="红石联机（Yggdrasil 外置登录）" IsChecked="{Binding RedstoneEnabled}" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="微软正版登录" Style="{StaticResource SectionTitle}" />
+                            <TextBlock Text="Azure 应用（客户端）ID" Style="{StaticResource Overline}" Margin="0,0,0,5" />
+                            <TextBox Text="{Binding MicrosoftClientId}" FontFamily="{DynamicResource MonoFont}" FontSize="11.5" />
+                            <TextBlock Style="{StaticResource Hint}" Margin="0,8,0,0"
+                                       Text="需要在 Azure 门户注册一个「桌面应用程序」，把应用程序(客户端)ID 填在这里；未填写时正版登录入口不可用，不影响离线与红石登录。" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="环境" Style="{StaticResource SectionTitle}" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="已安装版本" Style="{StaticResource Overline}" Margin="0" />
+                                    <TextBlock Text="{Binding InstalledCount}" FontFamily="{DynamicResource MonoFont}"
+                                               FontSize="20" Foreground="{DynamicResource BrushAccent}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="配置文件" Style="{StaticResource Overline}" Margin="0" />
+                                    <TextBlock Text="%APPDATA%\MindCraftLauncher" FontFamily="{DynamicResource MonoFont}"
+                                               FontSize="10.5" Foreground="{DynamicResource BrushTextDim}"
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+
+            <!-- 保存条 -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Content="保存设置" Command="{Binding SaveCommand}" Style="{StaticResource Primary}"
+                            Padding="28,10" MinHeight="40" />
+                    <TextBlock Grid.Column="1" Text="{Binding Status}" VerticalAlignment="Center" Margin="16,0,0,0"
+                               Foreground="{DynamicResource BrushTextDim}" FontSize="11.5" TextWrapping="Wrap" />
+                </Grid>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

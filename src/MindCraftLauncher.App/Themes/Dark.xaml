@@ -1,0 +1,107 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        深色主题「Deep Space」。
+        ThemeManager 在运行时整本替换本字典，所以这里必须与 Light.xaml 提供完全相同的键。
+    -->
+
+    <!-- 底色 -->
+    <SolidColorBrush x:Key="BrushWindow" Color="#0A0C12" />
+    <SolidColorBrush x:Key="BrushWindowDeep" Color="#06080D" />
+    <SolidColorBrush x:Key="BrushSurface" Color="#10141D" />
+    <SolidColorBrush x:Key="BrushSurfaceAlt" Color="#151A25" />
+    <SolidColorBrush x:Key="BrushElevated" Color="#1A2030" />
+    <SolidColorBrush x:Key="BrushHover" Color="#202839" />
+    <SolidColorBrush x:Key="BrushBorder" Color="#242C3D" />
+    <SolidColorBrush x:Key="BrushBorderSoft" Color="#1A2130" />
+    <SolidColorBrush x:Key="BrushDivider" Color="#1E2534" />
+    <SolidColorBrush x:Key="BrushInput" Color="#0C1017" />
+    <SolidColorBrush x:Key="BrushNavSelected" Color="#1B2336" />
+    <SolidColorBrush x:Key="BrushScrollThumb" Color="#2C3548" />
+
+    <!-- 文字 -->
+    <SolidColorBrush x:Key="BrushText" Color="#EEF2FA" />
+    <SolidColorBrush x:Key="BrushTextDim" Color="#94A1B8" />
+    <SolidColorBrush x:Key="BrushTextMute" Color="#616D84" />
+    <SolidColorBrush x:Key="BrushTextOnAccent" Color="#FFFFFF" />
+
+    <!-- 强调色与语义色 -->
+    <SolidColorBrush x:Key="BrushAccent" Color="#6C8CFF" />
+    <SolidColorBrush x:Key="BrushAccentHover" Color="#8CA6FF" />
+    <SolidColorBrush x:Key="BrushAccent2" Color="#B36BFF" />
+    <SolidColorBrush x:Key="BrushAccentSoft" Color="#1B2440" />
+    <SolidColorBrush x:Key="BrushOk" Color="#38E0A0" />
+    <SolidColorBrush x:Key="BrushWarn" Color="#FFC24B" />
+    <SolidColorBrush x:Key="BrushErr" Color="#FF6B6B" />
+
+    <!-- 两条联机通道的识别色 -->
+    <SolidColorBrush x:Key="BrushTerracotta" Color="#FF8A5B" />
+    <SolidColorBrush x:Key="BrushRedstone" Color="#FF5D6C" />
+    <SolidColorBrush x:Key="BrushTerracottaSoft" Color="#2A1B17" />
+    <SolidColorBrush x:Key="BrushRedstoneSoft" Color="#2A1519" />
+
+    <!-- 渐变：主按钮、主视觉、导航选中、极光背景 -->
+    <LinearGradientBrush x:Key="BrushAccentGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#6C8CFF" Offset="0" />
+        <GradientStop Color="#8B7BFF" Offset="0.52" />
+        <GradientStop Color="#B36BFF" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="BrushAccentGradientHover" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#8CA6FF" Offset="0" />
+        <GradientStop Color="#A691FF" Offset="0.52" />
+        <GradientStop Color="#C689FF" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="BrushTerracottaGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#FF8A5B" Offset="0" />
+        <GradientStop Color="#FF6B8A" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="BrushRedstoneGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#FF5D6C" Offset="0" />
+        <GradientStop Color="#FF8A5B" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="BrushRailSelected" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#2A3560" Offset="0" />
+        <GradientStop Color="#2C2350" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="BrushHero" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#182140" Offset="0" />
+        <GradientStop Color="#1B1738" Offset="0.45" />
+        <GradientStop Color="#0F1421" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="BrushTopBar" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#10141D" Offset="0" />
+        <GradientStop Color="#0C1017" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="BrushWindowGradient" StartPoint="0,0" EndPoint="0.9,1">
+        <GradientStop Color="#0B0E15" Offset="0" />
+        <GradientStop Color="#080A10" Offset="1" />
+    </LinearGradientBrush>
+
+    <RadialGradientBrush x:Key="BrushAuroraA" GradientOrigin="0.5,0.5" Center="0.5,0.5" RadiusX="0.5" RadiusY="0.5">
+        <GradientStop Color="#406C8CFF" Offset="0" />
+        <GradientStop Color="#1A6C8CFF" Offset="0.55" />
+        <GradientStop Color="#006C8CFF" Offset="1" />
+    </RadialGradientBrush>
+
+    <RadialGradientBrush x:Key="BrushAuroraB" GradientOrigin="0.5,0.5" Center="0.5,0.5" RadiusX="0.5" RadiusY="0.5">
+        <GradientStop Color="#3AB36BFF" Offset="0" />
+        <GradientStop Color="#18B36BFF" Offset="0.55" />
+        <GradientStop Color="#00B36BFF" Offset="1" />
+    </RadialGradientBrush>
+
+    <!-- 玻璃卡片：一层极淡的顶部高光，靠渐变模拟，不用真实模糊以免掉帧 -->
+    <LinearGradientBrush x:Key="BrushGlass" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#14FFFFFF" Offset="0" />
+        <GradientStop Color="#05FFFFFF" Offset="0.35" />
+        <GradientStop Color="#00FFFFFF" Offset="1" />
+    </LinearGradientBrush>
+
+</ResourceDictionary>

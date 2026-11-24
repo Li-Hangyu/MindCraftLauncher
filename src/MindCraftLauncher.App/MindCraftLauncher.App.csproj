@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>MindCraftLauncher.App</RootNamespace>
+    <!-- 程序集名不带空格：pack:// URI 与 dotnet run 都更稳，界面上显示的名字由 AssemblyTitle 决定 -->
+    <AssemblyName>MindCraftLauncher</AssemblyName>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Version>1.0.0</Version>
+    <Product>Mind Craft Launcher</Product>
+    <AssemblyTitle>Mind Craft Launcher</AssemblyTitle>
+    <!-- 让非 Windows 机器（CI / 云开发环境）也能编译这个工程；在 Windows 上此值无副作用 -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MindCraftLauncher.Core\MindCraftLauncher.Core.csproj" />
+  </ItemGroup>
+
+</Project>

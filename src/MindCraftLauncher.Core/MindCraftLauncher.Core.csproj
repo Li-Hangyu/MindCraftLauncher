@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- 核心层刻意不依赖 WPF / Windows，这样它在任何平台上都能编译并跑测试 -->
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>MindCraftLauncher.Core</RootNamespace>
+    <AssemblyName>MindCraftLauncher.Core</AssemblyName>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+</Project>

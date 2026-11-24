@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>Mind Craft Launcher · 界面预览</title>
+<style>
+  :root{
+    --window:#0A0C12; --surface:#10141D; --surface-alt:#151A25; --elevated:#1A2030;
+    --hover:#202839; --border:#242C3D; --border-soft:#1A2130; --divider:#1E2534;
+    --text:#EEF2FA; --text-dim:#94A1B8; --text-mute:#616D84;
+    --accent:#6C8CFF; --accent2:#B36BFF; --accent-soft:#1B2440;
+    --ok:#38E0A0; --warn:#FFC24B; --err:#FF6B6B;
+    --terracotta:#FF8A5B; --redstone:#FF5D6C;
+    --input:#0C1017;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:#05060A;
+    font-family:"Noto Sans CJK SC","Microsoft YaHei UI","Segoe UI",sans-serif;
+    color:var(--text);
+    padding:36px;
+    display:flex;flex-direction:column;gap:28px;align-items:flex-start;
+  }
+  .label{font-size:11px;color:#4A5365;letter-spacing:.18em;text-transform:uppercase;margin-bottom:-14px}
+
+  /* ============ 窗口外框 ============ */
+  .win{
+    width:1240px;height:800px;border:1px solid var(--border);border-radius:2px;overflow:hidden;
+    background:linear-gradient(135deg,#0B0E15,#080A10);
+    display:grid;grid-template-rows:58px 1fr 34px;
+    box-shadow:0 30px 80px rgba(0,0,0,.65);
+  }
+
+  /* 标题条 */
+  .titlebar{
+    display:flex;align-items:center;padding:0 8px 0 18px;
+    background:linear-gradient(#10141D,#0C1017);position:relative;
+  }
+  .brand{display:flex;align-items:center;gap:11px}
+  .logo{
+    width:32px;height:32px;border-radius:9px;display:grid;place-items:center;
+    background:linear-gradient(135deg,#6C8CFF,#8B7BFF 52%,#B36BFF);
+    font-weight:800;font-size:17px;color:#fff;
+    box-shadow:0 0 16px rgba(108,140,255,.55);
+  }
+  .wordmark b{display:block;font-size:12.5px;letter-spacing:.02em}
+  .wordmark span{display:block;font-size:8.5px;color:var(--text-mute);letter-spacing:.34em;margin-top:1px}
+
+  .center-pill{
+    position:absolute;left:50%;transform:translateX(-50%);
+    display:flex;align-items:center;gap:0;
+    background:var(--surface-alt);border-radius:999px;padding:4px 12px;font-size:10.5px;color:var(--text-dim);
+  }
+  .dot{width:6px;height:6px;border-radius:50%;background:#5C6678;margin-right:7px}
+  .center-pill .sep{width:1px;height:11px;background:var(--border);margin:0 10px}
+
+  .title-actions{margin-left:auto;display:flex;align-items:center}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    height:34px;padding:0 14px;border-radius:9px;font-size:13px;
+    background:var(--surface-alt);border:1px solid var(--border);color:var(--text);cursor:pointer;
+  }
+  .btn.primary{
+    background:linear-gradient(135deg,#6C8CFF,#8B7BFF 52%,#B36BFF);border:1px solid transparent;
+    color:#fff;font-weight:600;padding:0 20px;box-shadow:0 4px 18px rgba(108,140,255,.28);
+  }
+  .btn.ghost{background:transparent;border-color:transparent;color:var(--text-dim)}
+  .btn.lg{height:44px;padding:0 26px;font-size:14px}
+  .btn.danger{background:transparent;border-color:var(--err);color:var(--err)}
+  .vsep{width:1px;height:20px;background:var(--border);margin:0 10px 0 14px}
+  .cap{width:44px;height:32px;border-radius:7px;display:grid;place-items:center;color:var(--text-dim);font-size:10px}
+  .cap.close:hover{background:#E81123;color:#fff}
+
+  /* 主体 */
+  .body{display:grid;grid-template-columns:96px 1fr;min-height:0}
+
+  /* 左导航 */
+  .rail{
+    background:var(--surface);border-right:1px solid var(--border-soft);
+    padding:12px 9px 10px;display:flex;flex-direction:column;
+  }
+  .nav-item{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+    padding:10px 4px;border-radius:13px;margin:2px 0;color:var(--text-mute);position:relative;cursor:pointer;
+  }
+  .nav-item span{font-size:10.5px}
+  .nav-item.active{background:linear-gradient(135deg,#2A3560,#2C2350);color:var(--text)}
+  .nav-item.active::before{
+    content:"";position:absolute;left:-1px;top:50%;transform:translateY(-50%);
+    width:3px;height:22px;border-radius:2px;background:linear-gradient(#6C8CFF,#B36BFF);
+  }
+  .rail-sep{height:1px;background:var(--divider);margin:8px}
+  .rail-bottom{margin-top:auto}
+  svg{display:block}
+
+  /* 内容区 */
+  .content{position:relative;overflow:hidden;background:linear-gradient(160deg,#0B0E15,#080A10)}
+  .aurora{position:absolute;border-radius:50%;pointer-events:none}
+  .a1{width:720px;height:720px;right:-260px;top:-330px;
+      background:radial-gradient(circle,rgba(108,140,255,.25),rgba(108,140,255,.10) 55%,transparent 72%)}
+  .a2{width:640px;height:640px;left:-280px;bottom:-300px;
+      background:radial-gradient(circle,rgba(179,107,255,.18),rgba(179,107,255,.06) 55%,transparent 72%)}
+  .page{position:relative;padding:20px 26px 26px;max-width:1090px}
+
+  /* 页头 */
+  .page-head{display:flex;align-items:center;gap:12px}
+  .accent-bar{width:4px;height:26px;border-radius:2px;background:linear-gradient(#6C8CFF,#B36BFF)}
+  .page-title{font-size:20px;font-weight:700}
+  .page-sub{font-size:11.5px;color:var(--text-dim);margin-top:6px;line-height:18px;max-width:760px}
+
+  /* 卡片 */
+  .card{
+    background:var(--surface);border:1px solid var(--border-soft);border-radius:14px;padding:16px;margin-bottom:14px;
+  }
+  .hero{
+    border-radius:18px;padding:24px;margin:18px 0 16px;
+    background:linear-gradient(135deg,#182140,#1B1738 45%,#0F1421);
+    border:1px solid transparent;
+    background-clip:padding-box;position:relative;
+    box-shadow:0 18px 40px rgba(0,0,0,.42);
+  }
+  .hero::before{
+    content:"";position:absolute;inset:-1px;border-radius:19px;padding:1px;
+    background:linear-gradient(135deg,#6C8CFF,#B36BFF);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;
+  }
+  .hero-grid{display:flex;justify-content:space-between;gap:20px;align-items:center}
+  .overline{font-size:10.5px;font-weight:600;color:var(--text-mute);margin-bottom:6px}
+  .display{font-size:30px;font-weight:700;letter-spacing:-.01em}
+  .chips{display:flex;gap:7px;margin-top:14px}
+  .chip{
+    display:inline-flex;align-items:center;padding:3px 8px;border-radius:6px;font-size:10.5px;
+    background:var(--surface-alt);border:1px solid var(--border-soft);color:var(--text-dim);
+  }
+  .chip.acc{background:var(--accent-soft);border-color:transparent;color:#A9BBFF}
+
+  .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+  .stat-num{font-size:26px;font-weight:700;margin-top:4px}
+  .hint{font-size:11.5px;color:var(--text-dim);line-height:18px}
+  .section{font-size:13px;font-weight:600;margin-bottom:8px}
+
+  .select{
+    height:34px;border-radius:8px;background:var(--input);border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;padding:0 13px;font-size:13px;color:var(--text);
+  }
+  .select .arrow{width:10px;height:6px;border-left:1.5px solid var(--text-dim);border-bottom:1.5px solid var(--text-dim);transform:rotate(-45deg)}
+
+  .console{
+    background:var(--input);border:1px solid var(--border-soft);border-radius:10px;padding:12px;
+    font-family:"Cascadia Mono",Consolas,monospace;font-size:11.5px;color:var(--text-dim);
+    height:150px;line-height:1.65;overflow:hidden;
+  }
+  .console .ok{color:var(--ok)}
+  .console .acc{color:#A9BBFF}
+
+  /* 版本卡片 */
+  .cards{display:flex;flex-wrap:wrap;gap:14px}
+  .vcard{
+    width:278px;border-radius:14px;padding:15px;background:var(--surface);border:1px solid var(--border-soft);
+    position:relative;
+  }
+  .vcard.sel{border-color:transparent;box-shadow:0 0 0 1px rgba(108,140,255,.9),0 0 30px rgba(108,140,255,.18)}
+  .vcard.sel::before{
+    content:"";position:absolute;left:9px;top:16px;bottom:16px;width:3px;border-radius:2px;
+    background:linear-gradient(#6C8CFF,#B36BFF);
+  }
+  .vcard h3{font-size:15px;font-weight:700}
+  .vcard .sub{font-size:11.5px;color:var(--text-dim);margin-top:4px}
+  .badge{position:absolute;right:15px;top:15px;font-size:9.5px;font-weight:600;color:#A9BBFF;background:var(--accent-soft);
+         border-radius:6px;padding:2px 8px}
+  .vcard .chips{margin-top:12px}
+  .vcard .date{font-family:"Cascadia Mono",Consolas,monospace;font-size:10.5px;color:var(--text-dim);margin-top:8px}
+  .vcard .line{height:1px;background:var(--divider);margin:12px 0 10px}
+  .vcard .actions{display:flex;gap:6px}
+  .tiny{height:28px;padding:0 12px;font-size:12px;border-radius:8px}
+
+  /* 状态栏 */
+  .statusbar{
+    background:var(--surface);border-top:1px solid var(--border-soft);
+    display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-size:11px;color:var(--text-dim);
+  }
+  .statusbar .left{display:flex;align-items:center;gap:8px}
+  .statusbar .right{font-size:10.5px;color:var(--text-mute)}
+  .okdot{width:6px;height:6px;border-radius:50%;background:var(--ok)}
+</style>
+</head>
+<body>
+
+<div class="label">01 — 启动页（深色主题，默认）</div>
+<div class="win">
+  <!-- 标题条 -->
+  <div class="titlebar">
+    <div class="brand">
+      <div class="logo">M</div>
+      <div class="wordmark"><b>MIND CRAFT</b><span>LAUNCHER</span></div>
+    </div>
+    <div class="center-pill">
+      <span class="dot"></span>陶瓦：未组网<span class="sep"></span>红石：未登录
+    </div>
+    <div class="title-actions">
+      <div class="btn primary">启动游戏</div>
+      <div class="vsep"></div>
+      <div class="cap">—</div>
+      <div class="cap">▢</div>
+      <div class="cap close">✕</div>
+    </div>
+  </div>
+
+  <div class="body">
+    <!-- 导航 -->
+    <div class="rail">
+      <div class="nav-item active">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M8 5 L18.5 12 L8 19 Z"/></svg>
+        <span>启动</span>
+      </div>
+      <div class="nav-item">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3 L21 7.5 L12 12 L3 7.5 Z M3 12 L12 16.5 L21 12 M3 16.5 L12 21 L21 16.5"/></svg>
+        <span>版本</span>
+      </div>
+      <div class="nav-item">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 L12 14.5 M7.5 10 L12 14.5 L16.5 10 M4.5 19.5 L19.5 19.5"/></svg>
+        <span>下载</span>
+      </div>
+      <div class="nav-item">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3 L20 7.5 L20 16.5 L12 21 L4 16.5 L4 7.5 Z M4 7.5 L12 12 L20 7.5 M12 12 L12 21"/></svg>
+        <span>整合包</span>
+      </div>
+      <div class="nav-item">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4 4 L10 4 L10 10 L4 10 Z M14 4 L20 4 L20 10 L14 10 Z M4 14 L10 14 L10 20 L4 20 Z M14 14 L20 14 L20 20 L14 20 Z"/></svg>
+        <span>模组</span>
+      </div>
+      <div class="rail-sep"></div>
+      <div class="nav-item">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 2.5 L15.5 2.5 L15.5 6 L12 6 Z M4 18 L7.5 18 L7.5 21.5 L4 21.5 Z M16.5 18 L20 18 L20 21.5 L16.5 21.5 Z M13.75 6 L13.75 11.5 L5.75 11.5 L5.75 18 M13.75 11.5 L18.25 11.5 L18.25 18"/></svg>
+        <span>陶瓦</span>
+      </div>
+      <div class="nav-item">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3 L19 6 L19 12 C19 16.4 15.9 19.6 12 21 C8.1 19.6 5 16.4 5 12 L5 6 Z M12 11 L12 15"/></svg>
+        <span>红石</span>
+      </div>
+      <div class="nav-item">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7.5 L20 7.5 M4 12 L20 12 M4 16.5 L20 16.5 M9 7.5 m -2,0 a 2,2 0 1 0 4,0 a 2,2 0 1 0 -4,0 M15 12 m -2,0 a 2,2 0 1 0 4,0 a 2,2 0 1 0 -4,0 M7.5 16.5 m -2,0 a 2,2 0 1 0 4,0 a 2,2 0 1 0 -4,0"/></svg>
+        <span>设置</span>
+      </div>
+      <div class="rail-bottom">
+        <div class="rail-sep"></div>
+        <div class="nav-item" style="gap:3px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 4 A 8,8 0 1 1 11.99,4 Z M12 4 L12 20"/></svg>
+          <span style="font-size:10px">DARK</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 内容 -->
+    <div class="content">
+      <div class="aurora a1"></div>
+      <div class="aurora a2"></div>
+
+      <div class="page">
+        <div class="page-head"><div class="accent-bar"></div><div class="page-title">启动</div></div>
+        <div class="page-sub">版本在【版本】页用卡片选，这里显示当前选中的那一个。右上角「启动游戏」随时直接进。</div>
+
+        <!-- Hero -->
+        <div class="hero">
+          <div class="hero-grid">
+            <div>
+              <div class="overline">CURRENT VERSION</div>
+              <div class="display">1.21.4-Fabric</div>
+              <div class="chips">
+                <span class="chip acc">Steve</span>
+                <span class="chip">已装 6 个版本</span>
+                <span class="chip">版本隔离</span>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:20px">
+                <div class="btn primary lg">▶&nbsp; 启动游戏</div>
+                <div class="btn lg">选择版本</div>
+                <div class="btn ghost lg">装新版本</div>
+              </div>
+            </div>
+            <svg width="230" height="180" viewBox="0 0 230 180" style="flex:none">
+              <defs>
+                <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#6C8CFF"/><stop offset="0.52" stop-color="#8B7BFF"/><stop offset="1" stop-color="#B36BFF"/>
+                </linearGradient>
+              </defs>
+              <polygon points="115,10 190,48 115,86 40,48" fill="url(#g1)"/>
+              <polygon points="40,48 115,86 115,168 40,130" fill="#6C8CFF" opacity="0.55"/>
+              <polygon points="190,48 115,86 115,168 190,130" fill="#B36BFF" opacity="0.75"/>
+              <polygon points="115,10 190,48 115,86 40,48" fill="#fff" opacity="0.10"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 状态卡 -->
+        <div class="stats">
+          <div class="card" style="margin:0">
+            <div class="overline" style="margin:0">已安装版本</div>
+            <div class="stat-num">6</div>
+            <div class="hint">在【版本】页管理</div>
+          </div>
+          <div class="card" style="margin:0">
+            <div class="overline" style="margin:0">可用账号</div>
+            <div class="stat-num">2</div>
+            <div class="hint">离线 / 红石外置登录</div>
+          </div>
+          <div class="card" style="margin:0">
+            <div class="overline" style="margin:0">联机通道</div>
+            <div class="chips" style="margin-top:6px">
+              <span class="chip" style="color:#FF8A5B;background:#2A1B17;border-color:transparent">陶瓦</span>
+              <span class="chip" style="color:#FF5D6C;background:#2A1519;border-color:transparent">红石</span>
+            </div>
+            <div class="hint" style="margin-top:7px">EasyTier 组网 / Yggdrasil 认证</div>
+          </div>
+        </div>
+
+        <!-- 账号 -->
+        <div class="card">
+          <div class="section">游戏账号</div>
+          <div class="select"><span>Steve（离线）</span><span class="arrow"></span></div>
+          <div class="hint" style="margin-top:8px">离线账号直接显示；红石外置登录账号在【红石联机】页登录后自动出现在这里。</div>
+        </div>
+
+        <!-- 控制台 -->
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div class="section">启动输出</div>
+            <div style="font-size:10.5px;color:var(--text-mute)">实时</div>
+          </div>
+          <div class="console">
+            <div class="acc">执行：java -Xmx4096M -Djava.library.path=... net.fabricmc.loader.impl.launch.knot.KnotClient</div>
+            <div>[12:31:02] [main/INFO]: Loading Minecraft 1.21.4 with Fabric Loader 0.16.9</div>
+            <div>[12:31:04] [main/INFO]: Loading 42 mods:</div>
+            <div>[12:31:07] <span class="ok">[Render thread/INFO]: Sound engine started</span></div>
+            <div>[12:31:09] [Render thread/INFO]: Created: 1024x512x4 minecraft:textures/atlas/blocks.png</div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <div class="btn">复制启动命令</div>
+            <div class="btn">清空输出</div>
+            <div class="btn danger" style="margin-left:auto">停止游戏</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="statusbar">
+    <div class="left"><span class="okdot"></span>就绪｜游戏目录：C:\Users\Steve\AppData\Roaming\.minecraft</div>
+    <div class="right">Mind Craft Launcher · .NET 8 WPF · 界面移植自 PCL2 结构</div>
+  </div>
+</div>
+
+<div class="label" style="margin-top:18px">02 — 版本页（卡片式选项卡）</div>
+<div class="win">
+  <div class="titlebar">
+    <div class="brand">
+      <div class="logo">M</div>
+      <div class="wordmark"><b>MIND CRAFT</b><span>LAUNCHER</span></div>
+    </div>
+    <div class="center-pill"><span class="dot" style="background:#38E0A0"></span>陶瓦：组网中<span class="sep"></span>红石：Steve</div>
+    <div class="title-actions">
+      <div class="btn primary">启动游戏</div>
+      <div class="vsep"></div>
+      <div class="cap">—</div><div class="cap">▢</div><div class="cap close">✕</div>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="rail">
+      <div class="nav-item"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M8 5 L18.5 12 L8 19 Z"/></svg><span>启动</span></div>
+      <div class="nav-item active"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3 L21 7.5 L12 12 L3 7.5 Z M3 12 L12 16.5 L21 12 M3 16.5 L12 21 L21 16.5"/></svg><span>版本</span></div>
+      <div class="nav-item"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 L12 14.5 M7.5 10 L12 14.5 L16.5 10 M4.5 19.5 L19.5 19.5"/></svg><span>下载</span></div>
+      <div class="nav-item"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3 L20 7.5 L20 16.5 L12 21 L4 16.5 L4 7.5 Z M4 7.5 L12 12 L20 7.5 M12 12 L12 21"/></svg><span>整合包</span></div>
+      <div class="nav-item"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4 4 L10 4 L10 10 L4 10 Z M14 4 L20 4 L20 10 L14 10 Z M4 14 L10 14 L10 20 L4 20 Z M14 14 L20 14 L20 20 L14 20 Z"/></svg><span>模组</span></div>
+      <div class="rail-sep"></div>
+      <div class="nav-item"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 2.5 L15.5 2.5 L15.5 6 L12 6 Z M4 18 L7.5 18 L7.5 21.5 L4 21.5 Z M16.5 18 L20 18 L20 21.5 L16.5 21.5 Z M13.75 6 L13.75 11.5 L5.75 11.5 L5.75 18 M13.75 11.5 L18.25 11.5 L18.25 18"/></svg><span>陶瓦</span></div>
+      <div class="nav-item"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3 L19 6 L19 12 C19 16.4 15.9 19.6 12 21 C8.1 19.6 5 16.4 5 12 L5 6 Z M12 11 L12 15"/></svg><span>红石</span></div>
+      <div class="nav-item"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7.5 L20 7.5 M4 12 L20 12 M4 16.5 L20 16.5 M9 7.5 m -2,0 a 2,2 0 1 0 4,0 a 2,2 0 1 0 -4,0 M15 12 m -2,0 a 2,2 0 1 0 4,0 a 2,2 0 1 0 -4,0 M7.5 16.5 m -2,0 a 2,2 0 1 0 4,0 a 2,2 0 1 0 -4,0"/></svg><span>设置</span></div>
+      <div class="rail-bottom">
+        <div class="rail-sep"></div>
+        <div class="nav-item" style="gap:3px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 4 A 8,8 0 1 1 11.99,4 Z M12 4 L12 20"/></svg><span style="font-size:10px">DARK</span></div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="aurora a1"></div>
+      <div class="aurora a2"></div>
+      <div class="page">
+        <div class="page-head"><div class="accent-bar"></div><div class="page-title">版本</div></div>
+        <div class="page-sub">共 6 个版本，其中整合包 1 个。点卡片即可切换，双击直接启动。</div>
+
+        <div style="display:flex;gap:8px;margin:16px 0">
+          <div class="btn">刷新列表</div>
+          <div class="btn">去下载新版本</div>
+          <div class="btn">去装整合包</div>
+        </div>
+
+        <div class="cards">
+          <div class="vcard sel">
+            <div class="badge">使用中</div>
+            <h3>1.21.4-Fabric</h3>
+            <div class="sub">1.21.4</div>
+            <div class="chips"><span class="chip">Fabric</span><span class="chip">Java 21</span></div>
+            <div class="date">2026-11-14 21:08</div>
+            <div class="line"></div>
+            <div class="actions"><div class="btn primary tiny">启动</div><div class="btn tiny">目录</div><div class="btn danger tiny">删除</div></div>
+          </div>
+          <div class="vcard">
+            <h3>1.20.1-Forge</h3>
+            <div class="sub">1.20.1</div>
+            <div class="chips"><span class="chip">Forge</span><span class="chip">Java 17</span></div>
+            <div class="date">2026-11-11 19:42</div>
+            <div class="line"></div>
+            <div class="actions"><div class="btn primary tiny">启动</div><div class="btn tiny">目录</div><div class="btn danger tiny">删除</div></div>
+          </div>
+          <div class="vcard">
+            <h3>Better MC 整合包</h3>
+            <div class="sub">BMCL-1.20.1</div>
+            <div class="chips"><span class="chip">整合包</span><span class="chip">Fabric</span><span class="chip">Java 17</span></div>
+            <div class="date">2026-11-09 10:15</div>
+            <div class="line"></div>
+            <div class="actions"><div class="btn primary tiny">启动</div><div class="btn tiny">目录</div><div class="btn danger tiny">删除</div></div>
+          </div>
+          <div class="vcard">
+            <h3>1.21.4-LabyMod</h3>
+            <div class="sub">1.21.4</div>
+            <div class="chips"><span class="chip">LabyMod</span><span class="chip">Java 21</span></div>
+            <div class="date">2026-11-08 22:03</div>
+            <div class="line"></div>
+            <div class="actions"><div class="btn primary tiny">启动</div><div class="btn tiny">目录</div><div class="btn danger tiny">删除</div></div>
+          </div>
+        </div>
+
+        <div style="margin-top:6px;background:var(--surface-alt);border:1px solid var(--border-soft);border-radius:10px;padding:13px 15px;display:flex;gap:9px;align-items:flex-start;max-width:780px">
+          <div style="color:var(--text-mute);font-size:14px">ⓘ</div>
+          <div class="hint" style="max-width:720px">每个版本是一张独立卡片：点卡片切换当前版本，点「启动」直接进游戏，点「删除」只删这个版本目录（不动存档与全局 mods）。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="statusbar">
+    <div class="left"><span class="okdot"></span>已选择版本：1.21.4-Fabric</div>
+    <div class="right">Mind Craft Launcher · .NET 8 WPF · 界面移植自 PCL2 结构</div>
+  </div>
+</div>
+
+</body>
+</html>

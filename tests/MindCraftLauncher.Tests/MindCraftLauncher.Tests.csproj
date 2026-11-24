@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>MindCraftLauncher.Tests</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <!-- 测试项目刻意不引 xunit/nunit，零 NuGet 依赖，dotnet run 直接跑，离线环境也不会因为还原失败卡住 -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\MindCraftLauncher.Core\MindCraftLauncher.Core.csproj" />
+  </ItemGroup>
+
+</Project>
